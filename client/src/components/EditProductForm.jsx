@@ -1,6 +1,48 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+
 function EditProductForm() {
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+
+  const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    getProduct();
+  }, []);
+
+  const getProduct = async () => {
+    const results = await axios.get("http://localhost:4001/products/" + params.Id)
+    const data = results.data.data
+    setName(data.name);
+    setImage(data.image);
+    setPrice(data.price);
+    setDescription(data.description);
+  } 
+
+  const editProduct = async () => {
+    await axios.put("http://localhost:4001/products/" + params.Id,
+     {
+        name,
+        image,
+        price,
+        description,
+      }
+    );
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    editProduct();
+    navigate("/");
+  }; 
+
   return (
-    <form className="product-form">
+    <form onSubmit={handleSubmit} className="product-form">
       <h1>Edit Product Form</h1>
       <div className="input-container">
         <label>
@@ -10,7 +52,10 @@ function EditProductForm() {
             name="name"
             type="text"
             placeholder="Enter name here"
-            onChange={() => {}}
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+            }}
           />
         </label>
       </div>
@@ -22,7 +67,10 @@ function EditProductForm() {
             name="image"
             type="text"
             placeholder="Enter image url here"
-            onChange={() => {}}
+            value={image}
+            onChange={(event) => {
+              setImage(event.target.value);
+            }}
           />
         </label>
       </div>
@@ -34,7 +82,10 @@ function EditProductForm() {
             name="price"
             type="number"
             placeholder="Enter price here"
-            onChange={() => {}}
+            value={price}
+            onChange={(event) => {
+              setPrice(event.target.value);
+            }}
           />
         </label>
       </div>
@@ -46,7 +97,10 @@ function EditProductForm() {
             name="description"
             type="text"
             placeholder="Enter description here"
-            onChange={() => {}}
+            value={description}
+            onChange={(event) => {
+              setDescription(event.target.value);
+            }}
             rows={4}
             cols={30}
           />
