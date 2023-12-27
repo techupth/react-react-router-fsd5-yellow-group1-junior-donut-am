@@ -1,6 +1,32 @@
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 function CreateProductForm() {
+  const navigate = useNavigate();
+
+  const [name, setNameInput] = useState("");
+  const [image, setImgInput] = useState("");
+  const [price, setPriceInput] = useState("");
+  const [description, setDescriptionInput] = useState("");
+
+  async function createPost() {
+    await axios.post("http://localhost:4001/products", {
+      name: name,
+      image: image,
+      price: price,
+      description: description,
+    });
+    navigate("/");
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    createPost();
+  };
+
   return (
-    <form className="product-form">
+    <form className="product-form" onSubmit={handleSubmit}>
       <h1>Create Product Form</h1>
       <div className="input-container">
         <label>
@@ -10,7 +36,10 @@ function CreateProductForm() {
             name="name"
             type="text"
             placeholder="Enter name here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setNameInput(event.target.value);
+            }}
+            value={name}
           />
         </label>
       </div>
@@ -22,7 +51,10 @@ function CreateProductForm() {
             name="image"
             type="text"
             placeholder="Enter image url here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setImgInput(event.target.value);
+            }}
+            value={image}
           />
         </label>
       </div>
@@ -34,7 +66,10 @@ function CreateProductForm() {
             name="price"
             type="number"
             placeholder="Enter price here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setPriceInput(event.target.value);
+            }}
+            value={price}
           />
         </label>
       </div>
@@ -46,7 +81,10 @@ function CreateProductForm() {
             name="description"
             type="text"
             placeholder="Enter description here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setDescriptionInput(event.target.value);
+            }}
+            value={description}
             rows={4}
             cols={30}
           />
